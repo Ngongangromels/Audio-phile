@@ -1,10 +1,14 @@
 "use client";
 
+import { AddProduct } from "./_components/add-product";
+import { NavBarAdmin } from "./_components/nav-bar-admin";
+
 const AdminPage = () => { 
 
   return (
    <div>
-       admin
+     <NavBarAdmin/>
+       <AddProduct/>
    </div>
   );
 }
