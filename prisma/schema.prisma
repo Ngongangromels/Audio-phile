@@ -10,8 +10,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Admin {
@@ -33,9 +33,17 @@ model Product {
   createdAt DateTime @default(now())
   admin Admin @relation(fields: [adminId], references: [id])
   adminId Int
- 
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
   user Payment[]
 
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String @unique
+  product Product[]
 }
 
 model User {

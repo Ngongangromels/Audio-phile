@@ -9,6 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,6 +27,7 @@ export const AddProduct = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(""); // URL de l'image
   const [price, setPrice] = useState(""); 
+  const [category, setCategory] = useState("")
 
   async function onCreate() {
     try {
@@ -34,6 +42,7 @@ export const AddProduct = () => {
           description,
           image,
           price,
+          category,
         }),
       });
 
@@ -43,6 +52,10 @@ export const AddProduct = () => {
 
       await res.json();
       toast.success("New product created!");
+
+      setTimeout(() => {
+        window.location.reload()
+      }, 3000)
     } catch {
       toast.error("Failed to create product");
     }
@@ -57,6 +70,20 @@ export const AddProduct = () => {
         <CardContent>
           <form>
             <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="category">Categorys</Label>
+                <Select onValueChange={(value) => setCategory(value)}>
+                  <SelectTrigger id="equipments" className="w-full" >
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent position="popper">
+                    <SelectItem value="technologie">TECHNOLOGIE</SelectItem>
+                    <SelectItem value="headphone">HEADPHONES</SelectItem>
+                    <SelectItem value="spearkers">SPEAKERS</SelectItem>
+                    <SelectItem value="earphones">EARPHONES</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="title">Title</Label>
                 <Input

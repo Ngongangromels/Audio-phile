@@ -27,6 +27,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    let category = await prisma.category.findUnique({
+      where: { name: body.category }
+    })
+
+    if(!category) {
+      category = await prisma.category.create({
+        data: {
+          name: body.category
+        }
+      })
+    }
+
     const product = await prisma.product.create({
       data: {
         title: body.title,
@@ -36,6 +48,9 @@ export async function POST(req: NextRequest) {
         admin: {
           connect: { id: admin.id }, 
         },
+        category: {
+          connect: { id: category.id }
+        }
       },
     });
 
