@@ -32,7 +32,7 @@ export const ProductSection = () => {
                 
                   <Button>
                     <Link
-                      href="#"
+                      href="/gallery"
                       className=" text-white uppercase py-3 px-6"
                     >
                       See Product
@@ -57,7 +57,7 @@ export const ProductSection = () => {
             <div className="relative z-10 p-12 md:p-16">
               <h2 className="text-3xl font-bold uppercase mb-6">ZX7 Speaker</h2>
               <Link
-                href="/products/zx7-speaker"
+                href="/gallery"
                 className="inline-block bg-transparent border border-black text-black uppercase py-3 px-6 hover:bg-black hover:text-white transition-colors"
               >
                 See Product
@@ -82,7 +82,7 @@ export const ProductSection = () => {
                 YX1 Earphones
               </h2>
               <Link
-                href="/products/yx1-earphones"
+                href="/gallery"
                 className="inline-block bg-transparent border border-black text-black uppercase py-3 px-6 hover:bg-black hover:text-white transition-colors w-fit"
               >
                 See Product

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { NavBar } from "./nav-bar"
+import Link from "next/link";
 
 
 export const Hero = () => {
@@ -18,9 +19,9 @@ export const Hero = () => {
               Experience natural, lifelike audio and exceptional build quality
               made for the passionate music enthusiast.
             </p>
-            <button className="bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-md uppercase tracking-wider">
+            <Link href="/gallery" className="bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-md uppercase tracking-wider">
               See Product
-            </button>
+            </Link>
           </div>
           <div className="flex-2 mt-0 md:mt-0 flex justify-center">
             <Image

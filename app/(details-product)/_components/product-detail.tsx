@@ -1,11 +1,42 @@
-import { ProductCard } from "@/app/(marketing)/_components/product-Card";
+"use client"
+// import { ProductCard } from "@/app/(marketing)/_components/product-Card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { GalleryProduct } from "./gallery-product";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCart } from "./cart-context";
 
+ interface ProductDetailProps {
+  id: number
+  title: string;
+  description: string;
+  price: string;
+  image: string;
+}
 
-export const ProductDetail = () => {
+export const ProductDetail = ({id, title, description, price, image}: ProductDetailProps) => {
+ 
+
+   const { handleAddToCart } = useCart();
+  const router = useRouter()
+  const [count, setCount] = useState(1)
+
+  const handleIncrement = () => {
+    setCount((index) => index + 1);
+  }
+  
+  const handleDecrement = () => {
+    setCount((index) => (index > 1 ? index - 1 : 1));
+  };
+
+  const addToCart = () => {
+    handleAddToCart({ id, title, image, price, count });
+    router.push("/checkout");
+  };
+
     return (
       <main className="">
         <div className="container mx-auto px-20 py-8">
@@ -22,35 +53,30 @@ export const ProductDetail = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-24">
             <div className="bg-[#F1F1F1] rounded-lg flex items-center justify-center p-8">
               <Image
-                src="/headPhoneDetails.png"
-                alt="XX99 MARK II HEADPHONES"
+                src={image}
+                alt={title}
                 width={400}
                 height={400}
-                className="object-contain"
+                className="object-cover"
               />
             </div>
             <div className="flex flex-col justify-center">
               <h1 className="text-3xl md:text-4xl font-bold uppercase mb-6">
-                XX99 Mark II Headphones
+                {title}
               </h1>
-              <p className="text-gray-500 mb-6">
-                The new XX99 Mark II headphones is the pinnacle of pristine
-                audio. It redefines your premium headphone experience by
-                reproducing the balanced depth and precision of studio-quality
-                sound.
-              </p>
-              <p className="text-xl font-bold mb-8">$ 2,999</p>
+              <p className="text-gray-500 mb-6">{description}</p>
+              <p className="text-xl font-bold mb-8">{price}</p>
               <div className="flex space-x-4">
                 <div className="flex items-center bg-[#F1F1F1] h-12">
-                  <Button className="px-4 h-full flex items-center justify-center text-gray-500 hover:text-[#D87D4A]">
+                  <Button onClick={handleDecrement} className="px-4 h-full flex items-center justify-center text-gray-500 hover:text-[#D87D4A]">
                     <Minus className="h-4 w-4" />
                   </Button>
-                  <span className="w-8 text-center">1</span>
-                  <Button className="px-4 h-full flex items-center justify-center text-gray-500 hover:text-[#D87D4A]">
+                  <span className="w-8 text-center">{count}</span>
+                  <Button onClick={handleIncrement} className="px-4 h-full flex items-center justify-center text-gray-500 hover:text-[#D87D4A]">
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
-                <Button className="bg-[#D87D4A] text-white uppercase py-3 px-8 hover:bg-[#e69667] transition-colors">
+                <Button onClick={addToCart} className="bg-[#D87D4A] text-white uppercase h-full py-3 px-8 hover:bg-[#e69667] transition-colors">
                   Add to Cart
                 </Button>
               </div>
@@ -65,8 +91,8 @@ export const ProductDetail = () => {
                 Featuring a genuine leather head strap and premium earcups,
                 these headphones deliver superior comfort for those who like to
                 enjoy endless listening. It includes intuitive controls designed
-                for any situation. Whether you are taking a business call or just
-                in your personal space, the auto on/off and pause features
+                for any situation. Whether you are taking a business call or
+                just in your personal space, the auto on/off and pause features
                 ensure that you ll never miss a beat.
               </p>
               <p className="text-gray-500">
@@ -107,7 +133,7 @@ export const ProductDetail = () => {
           </div>
 
           {/* Gallery */}
-          <div className="grid grid-cols-2 gap-6 mb-24">
+          {/* <div className="grid grid-cols-2 gap-6 mb-24">
             <div className="space-y-6">
               <div className="rounded-lg overflow-hidden">
                 <Image
@@ -137,10 +163,11 @@ export const ProductDetail = () => {
                 className="object-cover w-full h-full"
               />
             </div>
-          </div>
+          </div> */}
 
           {/* You May Also Like */}
-          <div className="mb-24">
+          <GalleryProduct />
+          {/* <div className="mb-24">
             <h2 className="text-2xl font-bold uppercase text-center mb-10">
               You may also like
             </h2>
@@ -200,12 +227,10 @@ export const ProductDetail = () => {
                 </Link>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Categories */}
-          <div className="mb-10">
-            <ProductCard/>
-          </div>
+          <div className="w-full mb-10">{/* <ProductCard/> */}</div>
 
           {/* About Section */}
           <section className="mb-10">
@@ -227,8 +252,8 @@ export const ProductDetail = () => {
               </div>
               <div className="md:w-1/2">
                 <Image
-                  src="/personneHead.jpg"
-                  alt="Person with headphones"
+                  src={image}
+                  alt={title}
                   width={500}
                   height={500}
                   className="rounded-lg object-cover"
