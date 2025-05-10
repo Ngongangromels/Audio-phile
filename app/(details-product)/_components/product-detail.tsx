@@ -8,6 +8,7 @@ import { GalleryProduct } from "./gallery-product";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "./cart-context";
+import { Skeleton } from "@/components/ui/skeleton";
 
  interface ProductDetailProps {
   id: number
@@ -52,13 +53,19 @@ export const ProductDetail = ({id, title, description, price, image}: ProductDet
           {/* Product Overview */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-24">
             <div className="bg-[#F1F1F1] rounded-lg flex items-center justify-center p-8">
-              <Image
-                src={image}
-                alt={title}
-                width={400}
-                height={400}
-                className="object-cover"
-              />
+              { image === undefined ? (
+                <Skeleton className="h-[400px] w-[400px] rounded-lg" />
+              ) : (
+                <Image
+                  src={image}
+                  alt={title}
+                  width={400}
+                  height={400}
+                  className="object-cover"
+                />
+              )                             
+
+              }
             </div>
             <div className="flex flex-col justify-center">
               <h1 className="text-3xl md:text-4xl font-bold uppercase mb-6">

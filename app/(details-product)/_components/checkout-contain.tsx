@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,12 +7,103 @@ import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "./cart-context";
-
-
+import { redirect, useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import { loadStripe } from "@stripe/stripe-js";
 
 export const CheckoutContain = () => {
-   
-  const { cart } = useCart();
+  const { user } = useUser();
+  const route = useRouter()
+  const userId = user?.id;
+  const { cart, clearCart } = useCart();
+
+  const name = user?.username || "";
+  const email = user?.emailAddresses[0].emailAddress || "";
+
+  // Assurez-vous de remplacer ceci par votre clé publique Stripe
+  const stripePromise = loadStripe(
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
+  );
+
+  // Removed duplicate declaration of cart
+  const handleClick = async () => {
+    // Récupérer l'instance Stripe
+    const stripe = await stripePromise;
+
+    // Récupérer les images et calculer le prix total
+    // const productImages = cart.map((product) => product.image);
+    // const totalPrice = cart.reduce(
+    //   (total, product) => total + parseFloat(product.price) * product.count,
+    //   0
+    // );
+
+    // Appeler votre API pour créer une session Checkout
+    const response = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        products: cart.map((product) => ({
+          id: product.id,
+          title: product.title,
+          image: product.image,
+          price: product.price,
+          quantity: product.count,
+        })),
+        totalPrice: cart.reduce(
+          (total, product) => total + parseFloat(product.price) * product.count,
+          0
+        ),
+      }),
+    });
+
+    const session = await response.json();
+
+    // Rediriger vers Checkout
+    if (!stripe) {
+      console.error("Stripe failed to initialize.");
+      return;
+    }
+
+    const result = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+  if (result.error) {
+    console.error(result.error);
+  } else {
+    // Si le paiement est réussi, vider le panier
+    clearCart();
+    route.push("/")
+    
+  }
+  };
+
+  const handleCheckout = async () => {
+    if (!userId) {
+      redirect("/sign-up");
+    }
+
+    try {
+      const response = await fetch("/api/add-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, name, email }),
+      });
+
+      const data = await response.json();
+      if (!data.success) {
+        console.error("Failed to add user:", data.error);
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
+  };
+
+  
 
   return (
     <div>
@@ -253,12 +344,25 @@ export const CheckoutContain = () => {
             </div>
 
             {/* Continue Button */}
-            <Button className="w-full bg-[#D87D4A] text-white uppercase py-3 hover:bg-[#e69667] transition-colors">
-              Continue & Pay
-            </Button>
+            {!userId && (
+              <Button
+                onClick={handleCheckout}
+                className="w-full bg-[#D87D4A] text-white uppercase py-3 px-3 cursor-pointer hover:bg-[#e69667] transition-colors"
+              >
+                Continue & Pay
+              </Button>
+            )}
+            {userId && (
+              <Button
+                onClick={handleClick}
+                className="w-full bg-[#D87D4A] text-white uppercase py-3 px-3 cursor-pointer text-center block hover:bg-[#e69667] transition-colors"
+              >
+                Continue & Pay
+              </Button>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
-}
+};

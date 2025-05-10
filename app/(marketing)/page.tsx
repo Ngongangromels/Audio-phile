@@ -72,20 +72,25 @@ const MarketingPage = () => {
     fetchEarPhone();
   }, []);
 
+  if (headPhone === undefined && speakers === undefined && earPhones === undefined) {
+     setTimeout(() => {
+      return (
+        <div className="flex flex-row space-x-3">
+          <Skeleton className="h-[350px] w-[450px] rounded-xl" />
+          <Skeleton className="h-[350px] w-[450px] rounded-xl" />
+          <Skeleton className="h-[350px] w-[450px] rounded-xl" />
+        </div>
+      )
+
+     }, 5000)
+  }
+
     return (
       <div className="min-h-full flex flex-col">
         <Hero />
         <section className="bg-white  py-40">
           <div className="container w-full mx-auto  px-20">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-             {headPhone && speakers && earPhones === undefined && (
-                <div className="flex flex-row space-x-3">
-                  <Skeleton className="h-[350px] w-[450px] rounded-xl" />
-                  <Skeleton className="h-[350px] w-[450px] rounded-xl" />
-                  <Skeleton className="h-[350px] w-[450px] rounded-xl" />
-                </div>
-              )}
-              
               {headPhone && (
                 <ProductCard
                   id={parseInt(headPhone.id)}

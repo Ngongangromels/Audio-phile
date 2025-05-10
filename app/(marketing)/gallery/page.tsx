@@ -40,7 +40,7 @@ const GalleryPage = () => {
           <div className="flex flex-row space-x-3">
             <Skeleton className="h-[350px] w-[450px] rounded-xl" />
             <Skeleton className="h-[350px] w-[450px] rounded-xl" />
-            
+            <Skeleton className="h-[350px] w-[450px] rounded-xl" />
           </div>
         )}
         {products.length > 0 && (

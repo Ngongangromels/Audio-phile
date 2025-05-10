@@ -1,6 +1,12 @@
-"use client"
+"use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 interface CartItem {
   id: number;
@@ -13,6 +19,8 @@ interface CartItem {
 interface CartContextProps {
   cart: CartItem[];
   handleAddToCart: (item: CartItem) => void;
+  removeItem: (id: number) => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -52,13 +60,21 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+   const removeItem = (id: number) => {
+     setCart((prevCart) => {
+       const updatedCart = prevCart.filter((product) => product.id !== id);
+       localStorage.setItem("cart", JSON.stringify(updatedCart)); // Mettre à jour le localStorage
+       return updatedCart;
+     });
+   };
+
   const clearCart = () => {
     setCart([]);
     localStorage.removeItem("cart");
   };
 
   return (
-    <CartContext.Provider value={{ cart, handleAddToCart, clearCart }}>
+    <CartContext.Provider value={{ cart, handleAddToCart, removeItem, clearCart }}>
       {children}
     </CartContext.Provider>
   );
