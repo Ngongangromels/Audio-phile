@@ -5,7 +5,7 @@ import {
   useContext,
   useState,
   ReactNode,
-  useEffect,
+
 } from "react";
 
 interface CartItem {
@@ -19,8 +19,8 @@ interface CartItem {
 interface CartContextProps {
   cart: CartItem[];
   handleAddToCart: (item: CartItem) => void;
-  removeItem: (id: number) => void;
-  clearCart: () => void;
+  // removeItem: (id: number) => void;
+  // clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -29,17 +29,17 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
   // Charger les données du panier depuis localStorage au démarrage
-  useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const storedCart = localStorage.getItem("cart");
+  //   if (storedCart) {
+  //     setCart(JSON.parse(storedCart));
+  //   }
+  // }, []);
 
   // Sauvegarder les données du panier dans localStorage à chaque mise à jour
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+  // useEffect(() => {
+  //   localStorage.setItem("cart", JSON.stringify(cart));
+  // }, [cart]);
   const handleAddToCart = (item: CartItem) => {
     setCart((prevCart) => {
       const existingProduct = prevCart.find(
@@ -60,21 +60,21 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-   const removeItem = (id: number) => {
-     setCart((prevCart) => {
-       const updatedCart = prevCart.filter((product) => product.id !== id);
-       localStorage.setItem("cart", JSON.stringify(updatedCart)); // Mettre à jour le localStorage
-       return updatedCart;
-     });
-   };
+  //  const removeItem = (id: number) => {
+  //    setCart((prevCart) => {
+  //      const updatedCart = prevCart.filter((product) => product.id !== id);
+  //      localStorage.setItem("cart", JSON.stringify(updatedCart)); // Mettre à jour le localStorage
+  //      return updatedCart;
+  //    });
+  //  };
 
-  const clearCart = () => {
-    setCart([]);
-    localStorage.removeItem("cart");
-  };
+  // const clearCart = () => {
+  //   setCart([]);
+  //   localStorage.removeItem("cart");
+  // };
 
   return (
-    <CartContext.Provider value={{ cart, handleAddToCart, removeItem, clearCart }}>
+    <CartContext.Provider value={{ cart, handleAddToCart }}>
       {children}
     </CartContext.Provider>
   );

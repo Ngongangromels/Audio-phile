@@ -7,15 +7,14 @@ import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "./cart-context";
-import { redirect, useRouter } from "next/navigation";
+import { redirect} from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { loadStripe } from "@stripe/stripe-js";
 
 export const CheckoutContain = () => {
   const { user } = useUser();
-  const route = useRouter()
   const userId = user?.id;
-  const { cart, clearCart } = useCart();
+  const { cart } = useCart();
 
   const name = user?.username || "";
   const email = user?.emailAddresses[0].emailAddress || "";
@@ -30,12 +29,6 @@ export const CheckoutContain = () => {
     // Récupérer l'instance Stripe
     const stripe = await stripePromise;
 
-    // Récupérer les images et calculer le prix total
-    // const productImages = cart.map((product) => product.image);
-    // const totalPrice = cart.reduce(
-    //   (total, product) => total + parseFloat(product.price) * product.count,
-    //   0
-    // );
 
     // Appeler votre API pour créer une session Checkout
     const response = await fetch("/api/create-checkout-session", {
@@ -72,12 +65,7 @@ export const CheckoutContain = () => {
 
   if (result.error) {
     console.error(result.error);
-  } else {
-    // Si le paiement est réussi, vider le panier
-    clearCart();
-    route.push("/")
-    
-  }
+  } 
   };
 
   const handleCheckout = async () => {
